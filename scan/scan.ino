@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
 #include <MFRC522.h>
+#include "secrets.h" // File containing sensitive information
 
 // Pin Definitions for ESP32 WROOM-DA
 #define SS_PIN 14    // Slave Select pin for RC522
@@ -10,10 +11,9 @@
 #define MOSI_PIN 26  // MOSI pin for SPI
 #define MISO_PIN 12  // MISO pin for SPI
 
-const char* ssid = "#";
-const char* password = "#";
-
 MFRC522 rfid(SS_PIN, RST_PIN);  // Create an instance of the RC522 class
+
+int dot = 1;
 
 void setup() {
   Serial.begin(115200);  // Initialize serial communications
@@ -81,6 +81,11 @@ void loop() {
   static unsigned long lastAlive = 0;
   if (millis() - lastAlive > 10000) {
     lastAlive = millis();
-    Serial.println("Still alive :)");
-  }
+    Serial.print(".");
+    if (dot == 3) {
+      Serial.println("Still alive");
+      dot = 0;
+    } 
+    dot++;
+  } 
 }
